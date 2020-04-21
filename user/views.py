@@ -10,14 +10,26 @@ from user.models import User
 
 @method_decorator(login_required, name='dispatch')
 class UserScore(View):
+    def post(self, request):
+        try:
+            score = request.POST.get("score")
+            user = request.user
+            user.score = score
+            user.save()
+        except Exception as e:
+            return JsonResponse({'code': -1, 'msg': '参数错误'})
+        return JsonResponse(data={
+            "code": 1,
+            'msg': 'success'
+        })
 
-    def get(self, request, userid):
+
+@method_decorator(login_required, name='dispatch')
+class ScoreRank(View):
+    def get(self, request):
         start = int(request.GET.get("start", 0))
         end = int(request.GET.get("end", 0))
-        try:
-            key_user = User.objects.get(id=userid)
-        except User.DoesNotExist:
-            return JsonResponse({'code': -1, 'msg': '参数错误'})
+        key_user = request.user
         user_list = User.objects.values("score", "name").order_by("-score")[start:end]
         data = {
             "user_list": list(user_list),
@@ -29,17 +41,4 @@ class UserScore(View):
         return JsonResponse(data={
             "code": 1,
             "data": data
-        })
-
-    def post(self, request,userid):
-        try:
-            score = request.POST.get("score")
-            user = request.user
-            user.score = score
-            user.save()
-        except Exception as e:
-            return JsonResponse({'code': -1, 'msg': '参数错误'})
-        return JsonResponse(data={
-            "code": 1,
-            'msg': 'success'
         })

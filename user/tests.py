@@ -34,7 +34,7 @@ class UserScoreTestCase(TestCase):
         pass
 
     def test_post_userscore(self):
-        path = "/userscore/{}/".format(self.user.id)
+        path = "/userscore/"
         response = self.unlogin_client.post(path)
         data = response.json()
         self.assertEqual(data['code'], -5000)
@@ -45,8 +45,8 @@ class UserScoreTestCase(TestCase):
         user = User.objects.get(id=self.user.id)
         self.assertEqual(user.score, 10000000)
 
-    def test_get_userscore(self):
-        path = "/userscore/{}/".format(self.user.id)
+    def test_get_scorerank(self):
+        path = "/scorerank/"
 
         a = random.randint(0, 10)
         b = random.randint(0, 10)
@@ -62,5 +62,5 @@ class UserScoreTestCase(TestCase):
         data = response.json()
         # print(data)
         self.assertEqual(data['code'], 1)
-        self.assertEqual(len(data['data']["user_list"]), end-start)
+        self.assertEqual(len(data['data']["user_list"]), end - start)
         self.assertEqual(data['data']["user_info"]["score"], self.user.score)

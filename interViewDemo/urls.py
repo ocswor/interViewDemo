@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from user.views import UserScore
+from user.views import UserScore, ScoreRank
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('userscore/<int:userid>/', UserScore.as_view()),
+    path('userscore/', UserScore.as_view()),
+    path('scorerank/', ScoreRank.as_view()),
 ]
